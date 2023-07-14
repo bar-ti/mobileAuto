@@ -7,4 +7,10 @@ public class MainClassTest extends MainClass {
     public void testGetLocalNumber() {
         Assert.assertEquals("Некорректное значение метода getLocalNumber()", 14, getLocalNumber());
     }
+
+    @Test
+    public void testGetClassNumber() {
+        Assert.assertTrue("Метод getClassNumber() возвращает число меньше 45 (" + getClassNumber() + ")",
+                getClassNumber() > 45);
+    }
 }

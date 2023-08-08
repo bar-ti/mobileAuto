@@ -11,6 +11,7 @@ import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.net.URL;
+import java.util.List;
 
 public class FirstTest {
     private AppiumDriver driver;
@@ -182,11 +183,42 @@ public class FirstTest {
                 5);
     }
 
+    @Test
+    public void checkTextInSearchResultTest() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Не найдена кнопка пропуска настроек",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Не найдена строка поиска",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "Не удалось ввести значение в строку поиска",
+                5);
+
+        assertFindResultsHasText(
+                By.id("org.wikipedia:id/page_list_item_title"),
+                "java",
+                "Не все результаты поиска содержат заданый текст");
+
+    }
+
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
         return wait.until(ExpectedConditions.presenceOfElementLocated(by));
+    }
+
+    private List<WebElement> waitForElementsCollectionPresent(By by, String error_message, long timeoutInSeconds) {
+        WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
+        wait.withMessage(error_message + "\n");
+        return wait.until(ExpectedConditions.numberOfElementsToBeMoreThan(by, 1));
     }
 
     private WebElement waitForElementPresent(By by, String error_message) {
@@ -227,6 +259,17 @@ public class FirstTest {
                 actualText
         );
         return element;
+    }
+
+    private void assertFindResultsHasText(By by, String expectedText, String errorMessage) {
+        List<WebElement> elements = waitForElementsCollectionPresent(by, "Не найден элемент", 5);
+        for (WebElement element : elements) {
+            String actualText = element.getText();
+            Assert.assertTrue(
+                    errorMessage,
+                    actualText.toLowerCase().contains(expectedText.toLowerCase())
+            );
+        }
     }
 
 }

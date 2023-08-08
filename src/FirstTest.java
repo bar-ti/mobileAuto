@@ -229,15 +229,4 @@ public class FirstTest {
         return element;
     }
 
-    private WebElement assertFindResulMoreThanOne(By by, String expectedText, String errorMessage) {
-        WebElement element = waitForElementPresent(by, "Не найден элемент", 5);
-        String actualText = element.getText();
-        Assert.assertEquals(
-                errorMessage,
-                expectedText,
-                actualText
-        );
-        return element;
-    }
-
 }

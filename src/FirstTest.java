@@ -147,6 +147,42 @@ public class FirstTest {
                 "Элемент не содержит ожидаемого текста");
     }
 
+
+    @Test
+    public void checkSearchResultAndCancelSearchTest() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Не найдена кнопка пропуска настроек",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Не найдена строка поиска",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "Не удалось ввести значение в строку поиска",
+                5);
+
+        waitForElementPresent(
+                By.id("org.wikipedia:id/search_results_display"),
+                "Не отображаются результаты поиска",
+                15);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_close_btn"),
+                "Не найдена кнопка X отмены поиска",
+                5);
+
+        waitForElementNotPresent(
+                By.id("org.wikipedia:id/search_results_display"),
+                "Не исчезли результаты поиска",
+                5);
+    }
+
+
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
         WebDriverWait wait = new WebDriverWait(driver, timeoutInSeconds);
         wait.withMessage(error_message + "\n");
@@ -183,6 +219,17 @@ public class FirstTest {
     }
 
     private WebElement assertElementHasText(By by, String expectedText, String errorMessage) {
+        WebElement element = waitForElementPresent(by, "Не найден элемент", 5);
+        String actualText = element.getText();
+        Assert.assertEquals(
+                errorMessage,
+                expectedText,
+                actualText
+        );
+        return element;
+    }
+
+    private WebElement assertFindResulMoreThanOne(By by, String expectedText, String errorMessage) {
         WebElement element = waitForElementPresent(by, "Не найден элемент", 5);
         String actualText = element.getText();
         Assert.assertEquals(

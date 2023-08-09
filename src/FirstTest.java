@@ -129,7 +129,7 @@ public class FirstTest {
                 "Не удалось найти заголовок статьи",
                 15);
 
-        String articleTitle = titleElement.getAttribute("content-desc");
+        String articleTitle = titleElement.getAttribute("name");
 
         Assert.assertEquals(
                 "Заловок статьи не соответсвует ожидаемому результату",
@@ -382,7 +382,7 @@ public class FirstTest {
                 "Не отображается результат поиска",
                 15);
 
-        String attribute = "content-desc";
+        String attribute = "name";
         String titleBeforeRotation = waitForElementAndGetAttribute(
                 By.id("pcs-edit-section-title-description"),
                 attribute,
@@ -393,7 +393,7 @@ public class FirstTest {
 
         String titleAfterRotation = waitForElementAndGetAttribute(
                 By.id("pcs-edit-section-title-description"),
-                "content-desc",
+                attribute,
                 "Не у элемента не найден атрибут ",
                 15);
 
@@ -402,11 +402,11 @@ public class FirstTest {
                 titleBeforeRotation,
                 titleAfterRotation);
 
-       driver.rotate(ScreenOrientation.PORTRAIT);
+        driver.rotate(ScreenOrientation.PORTRAIT);
 
         String titleAfterSecondRotation = waitForElementAndGetAttribute(
                 By.id("pcs-edit-section-title-description"),
-                "content-desc",
+                attribute,
                 "Не у элемента не найден атрибут ",
                 15);
 
@@ -417,7 +417,7 @@ public class FirstTest {
     }
 
     @Test
-    public void testChecksearchArticleInBackgrounf() {
+    public void testCheckSearchArticleInBackgrounf() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Не найдена кнопка пропуска настроек",
@@ -441,11 +441,99 @@ public class FirstTest {
 
         driver.runAppInBackground(2);
 
-
         waitForElementPresent(
                 By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
                 "Не отображается результат поиска после возвращения из бэкграунда",
                 15);
+    }
+
+    @Test
+    public void SaveTwoArticlesToMyListAndDeleteOneOfThem() {
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Не найдена кнопка пропуска настроек",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Не найдена строка поиска",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "Не удалось ввести значение в строку поиска",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
+                "Не отображается результат поиска",
+                15);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Не удалось нажать кнопку добавления в список для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                5);
+        String readingListName = "Reading list";
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/text_input"),
+                readingListName,
+                "Не удалось ввести название списка для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.id("android:id/button1"),
+                "Не удалось подвердить создание списка для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@content-desc='Navigate up']"),
+                "Не удалось вернуться к результатам поиска",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='High-level programming language']"),
+                "Не отображается результат поиска",
+                15);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/page_save"),
+                "Не удалось нажать кнопку добавления в список для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@text='" + readingListName + "']"),
+                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/snackbar_action"),
+                "Не удалось перейти в спискок для чтения",
+                5);
+
+        swipeElementToLeft(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Не удалось свайпнуть элемент влево");
+
+        waitForElementNotPresent(
+                By.xpath("//*[@text='Java (programming language)']"),
+                "Не удалось удалить элемент из списка",
+                5);
+        waitForElementPresent(
+                By.xpath("//*[@text='JavaScript']"),
+                "В списке для чтения не осталось нужной статьи",
+                5);
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {

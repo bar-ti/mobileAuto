@@ -448,8 +448,7 @@ public class FirstTest {
     }
 
     @Test
-    public void SaveTwoArticlesToMyListAndDeleteOneOfThem() {
-
+    public void saveTwoArticlesToMyListAndDeleteOneOfThemTest() {
         waitForElementAndClick(
                 By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
                 "Не найдена кнопка пропуска настроек",
@@ -534,6 +533,35 @@ public class FirstTest {
                 By.xpath("//*[@text='JavaScript']"),
                 "В списке для чтения не осталось нужной статьи",
                 5);
+    }
+
+    @Test
+    public void titlePresentTest() {
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/fragment_onboarding_skip_button"),
+                "Не найдена кнопка пропуска настроек",
+                5);
+
+        waitForElementAndClick(
+                By.id("org.wikipedia:id/search_container"),
+                "Не найдена строка поиска",
+                5);
+
+        waitForElementAndSendKeys(
+                By.id("org.wikipedia:id/search_src_text"),
+                "java",
+                "Не удалось ввести значение в строку поиска",
+                5);
+
+        waitForElementAndClick(
+                By.xpath("//*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='Object-oriented programming language']"),
+                "Не отображается результат поиска",
+                15);
+
+        assertElementPresent(
+                By.xpath("//*[@content-desc='Java (programming language)']"),
+                "Не найден заголовок страницы");
+
     }
 
     private WebElement waitForElementPresent(By by, String error_message, long timeoutInSeconds) {
@@ -659,10 +687,19 @@ public class FirstTest {
         }
     }
 
-
     private String waitForElementAndGetAttribute(By by, String attribute, String errorMessage, long timeoutInSeconds) {
         WebElement element = waitForElementPresent(by, errorMessage, timeoutInSeconds);
         return element.getAttribute(attribute);
+    }
+
+
+    private void assertElementPresent(By by, String errorMessage) {
+        try {
+            driver.findElement(by);
+        }
+        catch (Exception e ){
+            throw new AssertionError(errorMessage);
+        }
     }
 }
 

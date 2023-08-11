@@ -67,4 +67,15 @@ public class SearchTests extends CoreTestCase {
         searchPageObject.typeSearchLine(text);
         searchPageObject.assertEachSearchResultItemHasExpectedText(text);
     }
+
+    public void testSearchAndCheckTitleAndDescription() {
+        SearchPageObject searchPageObject = new SearchPageObject(driver);
+
+        searchPageObject.initSearchInput();
+        searchPageObject.typeSearchLine("tree");
+        searchPageObject.waitForElementByTitleAndDescription("Tree","Perennial woody plant with elongated trunk");
+        searchPageObject.waitForElementByTitleAndDescription("Tree of life","Motif in art and culture");
+        searchPageObject.waitForElementByTitleAndDescription("Tree traversal","Class of algorithms");
+    }
+
 }

@@ -16,7 +16,8 @@ public class SearchPageObject extends MainPageObject {
             RETURN_TO_SEARCH_RESULT_BUTTON = "//*[@content-desc='Navigate up']",
             SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']",
             SEARCH_RESULT_CONTAINER = "org.wikipedia:id/search_results_display",
-            SEARCH_RESULT_ITEM_TITLE = "org.wikipedia:id/page_list_item_title";
+            SEARCH_RESULT_ITEM_TITLE = "org.wikipedia:id/page_list_item_title",
+            SEARCH_RESULT_ITEM_BY_TITLE_AND_DESCRIPTION_TPL = "//*[@text='{TITLE}']/following::*[@text='{DESCRIPTION}']/parent::*[@class='android.view.ViewGroup']";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -25,6 +26,10 @@ public class SearchPageObject extends MainPageObject {
     /* TEMPLATES METHODS */
     private static String getResultSearchElement(String substring) {
         return SEARCH_RESULT_BY_SUBSTRING_TPL.replace("{SUBSTRING}", substring);
+    }
+
+    private static String getResultSearchElementByTitleAndDescription(String title, String description) {
+        return SEARCH_RESULT_ITEM_BY_TITLE_AND_DESCRIPTION_TPL.replace("{TITLE}", title).replace("{DESCRIPTION}", description);
     }
     /* TEMPLATES METHODS */
 
@@ -89,5 +94,11 @@ public class SearchPageObject extends MainPageObject {
 
     public void assertEachSearchResultItemHasExpectedText(String expectedText) {
         this.assertFindResultsHasText(By.id(SEARCH_RESULT_ITEM_TITLE), expectedText, "Не все результаты поиска содержат заданый текст");
+    }
+
+    public void waitForElementByTitleAndDescription(String title, String description) {
+        this.waitForElementPresent(
+                By.xpath(getResultSearchElementByTitleAndDescription(title, description)),
+                "\nВ результатах поиска не найден элемент с заголовком и описанием\n" + title + "\n" + description);
     }
 }

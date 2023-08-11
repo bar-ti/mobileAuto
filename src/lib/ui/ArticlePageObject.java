@@ -30,7 +30,7 @@ public class ArticlePageObject extends MainPageObject {
         this.swipeUpToFindElement(By.xpath(FOOTER_ELEMENT), "Не удалось проскроллить статью до конца", 20);
     }
 
-    public void addArticleToList(String nameOfFolder) {
+    public void addArticleToNewList(String nameOfFolder) {
         this.waitForElementAndClick(
                 By.id(ADD_TO_LIST_BUTTON),
                 "Не удалось нажать кнопку добавления в список для чтения",
@@ -48,6 +48,20 @@ public class ArticlePageObject extends MainPageObject {
                 By.id(CONFIRM_ADD_TO_LIST_BUTTON),
                 "Не удалось подвердить создание списка для чтения",
                 5);
+    }
 
+    public void addArticleToExistingList(String nameOfFolder) {
+        this.waitForElementAndClick(
+                By.id(ADD_TO_LIST_BUTTON),
+                "Не удалось нажать кнопку добавления в список для чтения",
+                5);
+        this.waitForElementAndClick(
+                By.id(SUBMIT_ADD_TO_LIST_BUTTON),
+                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                5);
+        this.waitForElementAndClick(
+                By.xpath("//*[@text='" + nameOfFolder + "']"),
+                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                5);
     }
 }

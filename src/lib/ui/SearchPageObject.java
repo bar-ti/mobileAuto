@@ -13,8 +13,10 @@ public class SearchPageObject extends MainPageObject {
             SEARCH_RESULT_BY_SUBSTRING_TPL = " //*[@resource-id='org.wikipedia:id/search_results_list']//*[@text='{SUBSTRING}']",
             SEARCH_CANCEL_BUTTON = "org.wikipedia:id/search_close_btn",
             SEARCH_RESULT_ELEMENTS = "//*[@resource-id='org.wikipedia:id/search_results_list']/*[@class='android.view.ViewGroup']",
-    //    String searchResultLocator = "org.wikipedia:id/page_list_item_description",
-    SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']";
+            RETURN_TO_SEARCH_RESULT_BUTTON = "//*[@content-desc='Navigate up']",
+            SEARCH_EMPTY_RESULT_ELEMENT = "//*[@text='No results']",
+            SEARCH_RESULT_CONTAINER = "org.wikipedia:id/search_results_display",
+            SEARCH_RESULT_ITEM_TITLE = "org.wikipedia:id/page_list_item_title";
 
     public SearchPageObject(AppiumDriver driver) {
         super(driver);
@@ -47,6 +49,10 @@ public class SearchPageObject extends MainPageObject {
         this.waitForElementPresent(By.id(SEARCH_CANCEL_BUTTON), "Не найдена кнопка X отмены поиска", 5);
     }
 
+    public void waitForCancelButtonAppearAndClick() {
+        this.waitForElementAndClick(By.id(SEARCH_CANCEL_BUTTON), "Не удалось найти/нажать кнопку X отмены поиска", 5);
+    }
+
     public void waitForCancelButtonToDisappear() {
         this.waitForElementNotPresent(By.id(SEARCH_CANCEL_BUTTON), "Не исчезла кнопка X отмены поиска", 5);
     }
@@ -68,5 +74,20 @@ public class SearchPageObject extends MainPageObject {
         this.assertElementsNotPresent(By.id(SEARCH_RESULT_ELEMENTS), "Результаты по запросу были найдены");
     }
 
+    public void returnToSearchResult() {
+        this.waitForElementAndClick(
+                By.xpath(RETURN_TO_SEARCH_RESULT_BUTTON), "Не удалось вернуться к результатам поиска", 5);
+    }
 
+    public void waitForSearchResultContainerAppear() {
+        this.waitForElementPresent(By.id(SEARCH_RESULT_CONTAINER), "Не отображаются результаты поиска", 15);
+    }
+
+    public void waitForSearchResultContainerDisappear() {
+        this.waitForElementNotPresent(By.id(SEARCH_RESULT_CONTAINER), "Не исчезли результаты поиска", 5);
+    }
+
+    public void assertEachSearchResultItemHasExpectedText(String expectedText) {
+        this.assertFindResultsHasText(By.id(SEARCH_RESULT_ITEM_TITLE), expectedText, "Не все результаты поиска содержат заданый текст");
+    }
 }

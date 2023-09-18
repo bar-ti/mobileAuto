@@ -1,10 +1,12 @@
 package tests;
 
-import io.appium.java_client.AppiumDriver;
 import lib.CoreTestCase;
 import lib.Platform;
-import lib.ui.android.AndroidArticlePageObject;
-import lib.ui.android.AndroidSearchPageObject;
+import lib.ui.ArticlePageObject;
+import lib.ui.SearchPageObject;
+import lib.ui.factories.ArticlePageObjectFactory;
+import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class ChangeAppConditionTests extends CoreTestCase {
@@ -13,21 +15,21 @@ public class ChangeAppConditionTests extends CoreTestCase {
         if (Platform.getInstance().isMW()) {
             return;
         }
-        AndroidSearchPageObject searchPageObject = new AndroidSearchPageObject((AppiumDriver) driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("java");
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
-        AndroidArticlePageObject articlePageObject = new AndroidArticlePageObject((AppiumDriver) driver);
+        ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         String titleBeforeRotation = articlePageObject.getArticleTitle();
         this.rotateScreenLandscape();
         String titleAfterRotation = articlePageObject.getArticleTitle();
-        assertEquals(
+        Assert.assertEquals(
                 "Заголовок статьи изменился после поворота экрана",
                 titleBeforeRotation,
                 titleAfterRotation);
         this.rotateScreenPortrait();
         String titleAfterSecondRotation = articlePageObject.getArticleTitle();
-        assertEquals(
+        Assert.assertEquals(
                 "Заголовок статьи изменился после поворота экрана",
                 titleBeforeRotation,
                 titleAfterSecondRotation);
@@ -38,7 +40,7 @@ public class ChangeAppConditionTests extends CoreTestCase {
         if (Platform.getInstance().isMW()) {
             return;
         }
-        AndroidSearchPageObject searchPageObject = new AndroidSearchPageObject((AppiumDriver)driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         searchPageObject.initSearchInput();
         searchPageObject.typeSearchLine("java");
         searchPageObject.waitForSearchResult("Object-oriented programming language");

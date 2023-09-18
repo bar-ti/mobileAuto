@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import lib.Platform;
 import org.junit.Assert;
 import org.openqa.selenium.JavascriptExecutor;
@@ -22,13 +23,15 @@ public class ArticlePageObject extends MainPageObject {
     public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
     }
-
+@Step("Ожидание заголовка статьи")
     public WebElement waitForTitleElement() {
         return this.waitForElementPresent(TITLE, "Не удалось найти заголовок статьи", 15);
     }
 
+    @Step("Определение заголовка статьи")
     public String getArticleTitle() {
         WebElement titleElement = waitForTitleElement();
+        screenshot(this.takeScreenshot("search_page"));
         if (Platform.getInstance().isAndroid()) {
             return titleElement.getAttribute("name");
         } else {
@@ -36,6 +39,7 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Прокрутка статьи")
     public void swipeToFooter() {
         if (Platform.getInstance().isAndroid()) {
             this.swipeUpToFindElement(
@@ -50,6 +54,7 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Добавление статьи к новому списку")
     public void addArticleToNewList(String nameOfFolder) {
 //        if (Platform.getInstance().isMW()) {
 //            this.removeArticleFromSavedIfItAdded();
@@ -75,6 +80,7 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Добавление статьи к существующему списку")
     public void addArticleToExistingList(String nameOfFolder) {
         this.waitForElementAndClick(
                 ADD_TO_LIST_BUTTON,
@@ -92,6 +98,7 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Прокрутка страницы вверх")
     public void scrollWebPageUp() {
         if (Platform.getInstance().isMW()) {
             JavascriptExecutor javascriptExecutor = driver;
@@ -101,6 +108,7 @@ public class ArticlePageObject extends MainPageObject {
         }
     }
 
+    @Step("Прокрутка страница до появления элемента")
     public void scrollWebPageTillElementNotVisible(String locator, String errorMessage, int maxSwipes) {
         int alreadySwiped = 0;
         WebElement webElement = this.waitForElementPresent(locator, errorMessage, Duration.ofSeconds(10));

@@ -1,5 +1,6 @@
 package lib.ui;
 
+import io.qameta.allure.Step;
 import org.openqa.selenium.remote.RemoteWebDriver;
 
 import java.time.Duration;
@@ -17,17 +18,20 @@ public class AuthorizationPageObject extends MainPageObject {
         super(driver);
     }
 
+    @Step("Переход к авторизации")
     public void clickAuthButton() {
         this.waitForElementAndClick(MAIN_MENU, "Не удалось кликнуть главное меню", 10);
         this.waitForElementPresent(LOGIN_BUTTON, "Не найдена кнопка авторизации", Duration.ofSeconds(5));
         this.waitForElementAndClick(LOGIN_BUTTON, "Не удалось кликнуть кнопку авторизации", 10);
     }
 
+    @Step("Ввод логина '{login}' - пароля '{password}'")
     public void enterLoginData(String login, String password) {
         this.waitForElementAndSendKeys(LOGIN_INPUT, login, "Не удалось ввести логин", 5);
         this.waitForElementAndSendKeys(PASSWORD_INPUT, password, "Не удалось ввести пароль", 5);
     }
 
+    @Step("Клик на кнопку подтвержения ввода логина-пароля")
     public void submitForm() {
         this.waitForElementAndClick(SUBMIT_BUTTON, "Не удалось подтвердить ввод логина-пароля", 5);
     }

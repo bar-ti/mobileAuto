@@ -16,7 +16,8 @@ public class ArticlePageObject extends MainPageObject {
             SUBMIT_ADD_TO_LIST_BUTTON,
             NAME_OF_FOLDER_INPUT,
             CONFIRM_ADD_TO_LIST_BUTTON,
-            OPTIONS_REMOVE_FROM_MY_LIST_BUTTON;
+            OPTIONS_REMOVE_FROM_MY_LIST_BUTTON,
+            REMOVE_FROM_SAVED_BUTTON;
 
     public ArticlePageObject(RemoteWebDriver driver) {
         super(driver);
@@ -50,23 +51,28 @@ public class ArticlePageObject extends MainPageObject {
     }
 
     public void addArticleToNewList(String nameOfFolder) {
+//        if (Platform.getInstance().isMW()) {
+//            this.removeArticleFromSavedIfItAdded();
+//        }
         this.waitForElementAndClick(
                 ADD_TO_LIST_BUTTON,
                 "Не удалось нажать кнопку добавления в список для чтения",
                 5);
-        this.waitForElementAndClick(
-                SUBMIT_ADD_TO_LIST_BUTTON,
-                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
-                5);
-        this.waitForElementAndSendKeys(
-                NAME_OF_FOLDER_INPUT,
-                nameOfFolder,
-                "Не удалось ввести название списка для чтения",
-                5);
-        this.waitForElementAndClick(
-                CONFIRM_ADD_TO_LIST_BUTTON,
-                "Не удалось подвердить создание списка для чтения",
-                5);
+        if (Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    SUBMIT_ADD_TO_LIST_BUTTON,
+                    "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                    5);
+            this.waitForElementAndSendKeys(
+                    NAME_OF_FOLDER_INPUT,
+                    nameOfFolder,
+                    "Не удалось ввести название списка для чтения",
+                    5);
+            this.waitForElementAndClick(
+                    CONFIRM_ADD_TO_LIST_BUTTON,
+                    "Не удалось подвердить создание списка для чтения",
+                    5);
+        }
     }
 
     public void addArticleToExistingList(String nameOfFolder) {
@@ -74,14 +80,16 @@ public class ArticlePageObject extends MainPageObject {
                 ADD_TO_LIST_BUTTON,
                 "Не удалось нажать кнопку добавления в список для чтения",
                 5);
-        this.waitForElementAndClick(
-                SUBMIT_ADD_TO_LIST_BUTTON,
-                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
-                5);
-        this.waitForElementAndClick(
-                "//*[@text='" + nameOfFolder + "']",
-                "Не удалось нажать кнопку подтверждения добавления в список для чтения",
-                5);
+        if (Platform.getInstance().isAndroid()) {
+            this.waitForElementAndClick(
+                    SUBMIT_ADD_TO_LIST_BUTTON,
+                    "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                    5);
+            this.waitForElementAndClick(
+                    "//*[@text='" + nameOfFolder + "']",
+                    "Не удалось нажать кнопку подтверждения добавления в список для чтения",
+                    5);
+        }
     }
 
     public void scrollWebPageUp() {

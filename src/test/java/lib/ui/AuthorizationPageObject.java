@@ -7,16 +7,18 @@ import java.time.Duration;
 public class AuthorizationPageObject extends MainPageObject {
 
     private static final String
-            LOGIN_BUTTON = "xpath://a/span[text()='Log in']",
-            LOGIN_INPUT = "css:input[name='wpName']",
-            PASSWORD_INPUT = "css:input[name='wpPassword']",
-            SUBMIT_BUTTON = "css:button#wpLoginAttempt";
+            MAIN_MENU = "id:mw-mf-main-menu-button",
+            LOGIN_BUTTON = "xpath://*[@data-event-name='menu.login']",
+            LOGIN_INPUT = "id:wpName1",
+            PASSWORD_INPUT = "id:wpPassword1",
+            SUBMIT_BUTTON = "xpath://*[@name='wploginattempt']";
 
     public AuthorizationPageObject(RemoteWebDriver driver) {
         super(driver);
     }
 
     public void clickAuthButton() {
+        this.waitForElementAndClick(MAIN_MENU, "Не удалось кликнуть главное меню", 10);
         this.waitForElementPresent(LOGIN_BUTTON, "Не найдена кнопка авторизации", Duration.ofSeconds(5));
         this.waitForElementAndClick(LOGIN_BUTTON, "Не удалось кликнуть кнопку авторизации", 10);
     }

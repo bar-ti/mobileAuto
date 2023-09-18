@@ -1,14 +1,13 @@
 package tests;
 
 import lib.CoreTestCase;
-import lib.ui.ArticlePageObject;
-import lib.ui.MyListPageObject;
-import lib.ui.NavigationUIPageObject;
-import lib.ui.SearchPageObject;
+import lib.Platform;
+import lib.ui.*;
 import lib.ui.factories.ArticlePageObjectFactory;
 import lib.ui.factories.MyListPageObjectFactory;
 import lib.ui.factories.NavigationUIPageObjectFactory;
 import lib.ui.factories.SearchPageObjectFactory;
+import org.junit.Assert;
 import org.junit.Test;
 
 public class MyListsTests extends CoreTestCase {
@@ -34,7 +33,7 @@ public class MyListsTests extends CoreTestCase {
 
     @Test
     public void testSaveTwoArticlesToMyListAndDeleteOneOfThem() {
-        SearchPageObject searchPageObject =SearchPageObjectFactory.get(driver);
+        SearchPageObject searchPageObject = SearchPageObjectFactory.get(driver);
         ArticlePageObject articlePageObject = ArticlePageObjectFactory.get(driver);
         NavigationUIPageObject navigationUI = NavigationUIPageObjectFactory.get(driver);
         MyListPageObject myListPageObjects = MyListPageObjectFactory.get(driver);
@@ -45,15 +44,23 @@ public class MyListsTests extends CoreTestCase {
         searchPageObject.clickByArticleWithSubstring("Object-oriented programming language");
 
         articlePageObject.waitForTitleElement();
+        if (Platform.getInstance().isMW()) {
+            AuthorizationPageObject authorizationPageObject = new AuthorizationPageObject(driver);
+            authorizationPageObject.clickAuthButton();
+            authorizationPageObject.enterLoginData("TestMobileAuto", "xnj,nt,z");
+            authorizationPageObject.submitForm();
+            Assert.assertEquals(articlePageObject.waitForTitleElement().getText(), "Java (programming language)");
+        }
         articlePageObject.addArticleToNewList(nameOfFolder);
-
-        searchPageObject.returnToSearchResult();
+        if (Platform.getInstance().isAndroid()) {
+            searchPageObject.returnToSearchResult();
+        } else if (Platform.getInstance().isMW()) {
+            searchPageObject.initSearchInput();
+            searchPageObject.typeSearchLine("java");
+        }
         searchPageObject.clickByArticleWithSubstring("High-level programming language");
-
         articlePageObject.addArticleToExistingList(nameOfFolder);
-
         navigationUI.clickMyLists();
-
         myListPageObjects.swipeArticleToDelete("Java (programming language)");
         myListPageObjects.waitForArticleAppearByTitle("JavaScript");
     }
